@@ -8,7 +8,7 @@ import UsersPage from "./pages/UsersPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import TasksPage from "./pages/TasksPage";
 import Layout from "./components/Layout";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import ProtectedRoute  from "./components/ProtectedRoute";
 import SignUpPage from "./pages/SignUpPage";
 import ProjectList from "./components/Projects/ProjectList";
 import ProjectPage from "./pages/ProjectsPage";
