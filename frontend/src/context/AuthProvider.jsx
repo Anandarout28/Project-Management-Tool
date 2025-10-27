@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
   function logout() {
     setUser(null);
     localStorage.removeItem("auth_user");
+    localStorage.removeItem("token"); // In case token is stored separately
   }
 
   return (

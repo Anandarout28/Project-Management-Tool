@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
-import { fetchProjects, createProject } from "../api/projectApi";
+import { getProjects, createProject } from "../api/projectApi";
 import {
   Box, Button, Typography, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, Alert
 } from "@mui/material";
@@ -16,7 +16,7 @@ export default function ProjectsPage() {
     async function loadProjects() {
       if (!user) return;
       try {
-        const res = await fetchProjects(user.token);
+        const res = await getProjects(user.token);
         setProjects(res.data);
       } catch {
         setError("Could not fetch projects");

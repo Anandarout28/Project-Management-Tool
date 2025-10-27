@@ -24,3 +24,11 @@ export async function deleteTask(id, token) {
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+
+export async function assignTask(taskId, assigneeId, token) {
+  return axios.post(
+    `${API_URL}/tasks/${taskId}/assign`,
+    { assignee_id: assigneeId },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+}

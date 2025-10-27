@@ -1,25 +1,39 @@
-from pydantic import BaseModel
 from typing import Optional, List
+from datetime import datetime
+from pydantic import BaseModel, Field
 
 class ProjectBase(BaseModel):
-    name: str
-    description: Optional[str] = None
+    name: str = Field(..., max_length=100, title="Project Name")
+    description: Optional[str] = Field(None, max_length=500, title="Description")
 
 class ProjectCreate(ProjectBase):
-    start_date: Optional[str]
-    end_date: Optional[str]
+    pass
 
-class ProjectResponse(ProjectBase):
+class ProjectUpdate(ProjectBase):
+    pass
+
+class ProjectRead(ProjectBase):
     id: int
-    start_date: Optional[str]
-    end_date: Optional[str]
+    owner_id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-class ProjectMember(BaseModel):
+# If you want to include task summaries in project details:
+class TaskSummary(BaseModel):
     id: int
-    project_id: int
-    user_id: int
-    role: str
+    title: str
+    status: str
+    due_date: Optional[datetime]
+    assignee_id: Optional[int]
+
+    class Config:
+        from_attributes = True
+
+class ProjectDetail(ProjectRead):
+    tasks: List[TaskSummary] = []
+
     class Config:
         from_attributes = True

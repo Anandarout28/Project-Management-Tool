@@ -9,6 +9,7 @@ from jose import jwt
 import os
 from sqlalchemy.exc import IntegrityError
 router = APIRouter()
+from app.dependencies import get_current_user
 
 def get_db():
     db = SessionLocal()
@@ -17,22 +18,21 @@ def get_db():
     finally:
         db.close()
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "supersecret")
+SECRET_KEY = os.environ.get("SECRET_KEY", "EW7zNXSvDEYF8n6S8Clh3lZQhbgxhFjSP955AA13c_0")
 ALGORITHM = "HS256"
 
 # ---------- LOGIN ----------
 @router.post("/login")
-def login(
-    email: str = Form(...), 
-    password: str = Form(...), 
-    db: Session = Depends(get_db)
-):
-    user = db.query(User).filter(User.email == email).first()
-    if not user or not verify_password(password, user.password):
+def login(data: user_schema.UserLogin, db: Session = Depends(get_db)):
+    print("email:", data.email)
+    print("password:", data.password)
+    user = db.query(User).filter(User.email == data.email).first()
+    if not user or not verify_password(data.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    payload = {"user_id": user.id, "role":str( user.role)}
+    payload = {"user_id": user.id, "role": str(user.role)}
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return {"access_token": token, "token_type": "bearer"}
+
 
 # ---------- REGISTER ----------
 @router.post("/", response_model=user_schema.UserResponse)
@@ -63,3 +63,7 @@ def register_user(user_data: user_schema.UserCreate, db: Session = Depends(get_d
 @router.get("/", response_model=List[user_schema.UserRead])
 def get_all_users(db: Session = Depends(get_db)):
     return db.query(User).all()
+
+@router.get("/me", response_model=user_schema.UserRead)
+def get_current_user_info(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    return user
