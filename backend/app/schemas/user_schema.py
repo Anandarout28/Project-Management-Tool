@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 import enum
 
@@ -7,15 +7,24 @@ class UserRole(str, enum.Enum):
     USER = "user"
     manager = "manager"
     developer = "developer"
+class UserRead(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    role: UserRole
+  
 class UserBase(BaseModel):
     username: str
     email: EmailStr
     role: UserRole
+
 class UserCreate(UserBase):
-    password: str
-class userResponse(UserBase):
+    password: str = Field(..., min_length=6, max_length=72)
+class UserResponse(BaseModel):
     id: int
-    is_active: bool
+    username: str
+    email: EmailStr
+    role: str
 
     class Config:
-        orm_mode = True 
+        from_attributes = True        

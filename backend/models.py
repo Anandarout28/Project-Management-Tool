@@ -6,10 +6,10 @@ import datetime
 Base = declarative_base()
 
 class UserRole(enum.Enum):
-    ADMIN = 'Admin'
-    MANAGER = 'Manager'
-    DEVELOPER = 'Developer'
-
+    admin = 'admin'
+    manager = 'manager'
+    developer = 'developer'
+    user = 'user'
 class TaskStatus(enum.Enum):
     TODO = 'To Do'
     IN_PROGRESS = 'In Progress'
